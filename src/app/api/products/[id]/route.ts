@@ -5,14 +5,11 @@ import dbConnect from '@/lib/db';
 import Product from '../../../../../server/models/Product';
 import mongoose from 'mongoose';
 
-interface Params {
-  params: {
-    id: string;
-  };
-}
-
 // GET a specific product
-export async function GET(req: NextRequest, { params }: Params) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const { id } = params;
     
@@ -45,7 +42,10 @@ export async function GET(req: NextRequest, { params }: Params) {
 }
 
 // PUT (update) a specific product (admin only)
-export async function PUT(req: NextRequest, { params }: Params) {
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await getServerSession(authOptions);
     
@@ -111,7 +111,10 @@ export async function PUT(req: NextRequest, { params }: Params) {
 }
 
 // DELETE a specific product (admin only)
-export async function DELETE(req: NextRequest, { params }: Params) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await getServerSession(authOptions);
     

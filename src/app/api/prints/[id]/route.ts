@@ -5,14 +5,11 @@ import dbConnect from '@/lib/db';
 import Print from '../../../../../server/models/Print';
 import mongoose from 'mongoose';
 
-interface Params {
-  params: {
-    id: string;
-  };
-}
-
 // GET a specific print
-export async function GET(req: NextRequest, { params }: Params) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const { id } = params;
     
@@ -45,7 +42,10 @@ export async function GET(req: NextRequest, { params }: Params) {
 }
 
 // PUT (update) a specific print (admin only)
-export async function PUT(req: NextRequest, { params }: Params) {
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await getServerSession(authOptions);
     
@@ -103,7 +103,10 @@ export async function PUT(req: NextRequest, { params }: Params) {
 }
 
 // DELETE a specific print (admin only)
-export async function DELETE(req: NextRequest, { params }: Params) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await getServerSession(authOptions);
     

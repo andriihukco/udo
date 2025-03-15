@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import mongoose from 'mongoose';
 import { GridFSBucket, ObjectId } from 'mongodb';
@@ -11,7 +13,10 @@ interface Params {
 }
 
 // GET a specific uploaded file
-export async function GET(req: NextRequest, { params }: Params) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const { id } = params;
     
@@ -90,6 +95,24 @@ export async function GET(req: NextRequest, { params }: Params) {
     console.error('Error retrieving file:', error);
     return NextResponse.json(
       { error: 'Failed to retrieve file' },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE a specific upload (admin only)
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    
+    // Rest of the function...
+  } catch (error) {
+    console.error('Error deleting upload:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete upload' },
       { status: 500 }
     );
   }
