@@ -9,6 +9,15 @@ services:
       - NODE_ENV=production
       - MONGODB_URI=mongodb://admin:password@mongodb:27017/druk?authSource=admin
       - REDIS_URI=redis://redis:6379
+      # Add default admin user environment variables
+      - DEFAULT_ADMIN_NAME=${DEFAULT_ADMIN_NAME:-M}
+      - DEFAULT_ADMIN_ID=${DEFAULT_ADMIN_ID:-1}
+      - DEFAULT_ADMIN_ROLE=${DEFAULT_ADMIN_ROLE:-superadmin}
+      - DEFAULT_ADMIN_EMAIL=${DEFAULT_ADMIN_EMAIL:-m@u-do.store}
+      - DEFAULT_ADMIN_PASSWORD=${DEFAULT_ADMIN_PASSWORD:-motherlord}
+      # Add NextAuth environment variables
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-https://yourdomain.com}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-4Iyo0X0VHXa3tfnSHa1ql17OeQ7kBQFN3zEwFQ0Ea20=}
     depends_on:
       - mongodb
       - redis
@@ -29,9 +38,12 @@ services:
       - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      # Uncomment when you have SSL certificates
-      # - ./ssl:/etc/nginx/ssl
+      # SSL certificates for HTTPS
+      - ./ssl:/etc/nginx/ssl
       - ./public:/usr/share/nginx/html
+      # Add certbot for Let's Encrypt SSL
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
     depends_on:
       nextjs:
         condition: service_healthy
@@ -43,6 +55,19 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    # Add command to reload nginx when certificates are renewed
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  # Add Certbot for SSL certificates
+  certbot:
+    image: certbot/certbot
+    container_name: druk-certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    depends_on:
+      - nginx
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   mongodb:
     image: mongo:latest
@@ -51,9 +76,12 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
+      # Add volume for MongoDB backups
+      - ./mongodb_backups:/backups
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=druk
     restart: unless-stopped
     networks:
       - app-network
@@ -63,6 +91,18 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    # Add command to create regular backups
+    command: >
+      bash -c '
+        echo "MongoDB container started"
+        mongod --auth &
+        sleep 5
+        echo "Setting up backup cron job"
+        echo "0 0 * * * mongodump --host localhost --port 27017 -u admin -p password --authenticationDatabase admin --out /backups/backup-\$(date +\%Y\%m\%d)" > /etc/cron.d/mongodb-backup
+        crontab /etc/cron.d/mongodb-backup
+        cron
+        wait
+      '
 
   redis:
     image: redis:alpine
@@ -80,6 +120,7 @@ services:
       timeout: 10s
       retries: 3
 
+  # Only enable mongo-express in development environment
   mongo-express:
     image: mongo-express
     container_name: druk-mongo-express
@@ -90,11 +131,16 @@ services:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
       - ME_CONFIG_MONGODB_ADMINPASSWORD=password
       - ME_CONFIG_MONGODB_URL=mongodb://admin:password@mongodb:27017/admin
+      # Add basic authentication for security
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=password
     depends_on:
       mongodb:
         condition: service_healthy
     networks:
       - app-network
+    # Comment this out in production or secure it properly
+    # profiles: ["development"]
 
 networks:
   app-network:

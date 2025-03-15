@@ -8,10 +8,10 @@ import { GridFSBucket, ObjectId } from 'mongodb';
 // GET a specific uploaded file
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     
     // Validate MongoDB ObjectId
     if (!ObjectId.isValid(id)) {
@@ -96,7 +96,7 @@ export async function GET(
 // DELETE a specific upload (admin only)
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -109,7 +109,7 @@ export async function DELETE(
       );
     }
     
-    const { id } = params;
+    const { id } = context.params;
     
     // Validate MongoDB ObjectId
     if (!ObjectId.isValid(id)) {

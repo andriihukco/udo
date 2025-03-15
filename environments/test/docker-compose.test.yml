@@ -1,0 +1,74 @@
+services:
+  nextjs:
+    build:
+      context: ../../
+      dockerfile: Dockerfile.test
+    container_name: druk-nextjs-test
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=test
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/druk_test?authSource=admin
+      - REDIS_URI=redis://redis:6379
+      - DEFAULT_ADMIN_NAME=M
+      - DEFAULT_ADMIN_ID=1
+      - DEFAULT_ADMIN_ROLE=superadmin
+      - DEFAULT_ADMIN_EMAIL=m@u-do.store
+      - DEFAULT_ADMIN_PASSWORD=motherlord
+      - NEXTAUTH_URL=http://test.yourdomain.com
+      - NEXTAUTH_SECRET=test_environment_secret_key
+    ports:
+      - "3001:3000"
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - app-network
+    command: npm run start
+
+  nginx:
+    image: nginx:alpine
+    container_name: druk-nginx-test
+    ports:
+      - "8080:80"
+    volumes:
+      - ../../environments/test/nginx.test.conf:/etc/nginx/nginx.conf
+      - ../../public:/usr/share/nginx/html
+    depends_on:
+      - nextjs
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  mongodb:
+    image: mongo:latest
+    container_name: druk-mongodb-test
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_test_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=druk_test
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  redis:
+    image: redis:alpine
+    container_name: druk-redis-test
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_test_data:/data
+    restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongodb_test_data:
+  redis_test_data: 

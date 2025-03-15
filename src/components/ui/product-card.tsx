@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ShoppingCart, Heart, ImagePlus } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, getLighterColor } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -188,24 +188,33 @@ export function ProductCard({
               {colors.length > 0 && (
                 <div className="mb-2">
                   <div className="text-xs text-gray-500 mb-1">Color</div>
-                  <div className="flex flex-wrap gap-1">
+                  <div className="grid grid-cols-2 gap-1">
                     {colors.map((color) => (
-                      <button
+                      <div
                         key={color.value}
+                        className="flex items-center p-1.5 rounded-md cursor-pointer"
+                        style={{
+                          backgroundColor: getLighterColor(color.value, 0.1),
+                        }}
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
                           setSelectedColor(color.value);
                         }}
-                        className={cn(
-                          "w-6 h-6 rounded-full border transition-all",
-                          selectedColor === color.value
-                            ? "ring-2 ring-primary ring-offset-2"
-                            : "ring-0"
-                        )}
-                        style={{ backgroundColor: color.value }}
-                        title={color.name}
-                      />
+                      >
+                        <div
+                          className={cn(
+                            "w-5 h-5 rounded-full border flex-shrink-0 transition-all",
+                            selectedColor === color.value
+                              ? "ring-2 ring-primary ring-offset-1"
+                              : "ring-0"
+                          )}
+                          style={{ backgroundColor: color.value }}
+                        />
+                        <span className="ml-1.5 text-xs truncate">
+                          {color.name}
+                        </span>
+                      </div>
                     ))}
                   </div>
                 </div>

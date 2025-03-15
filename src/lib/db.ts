@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
 
+// Primary MongoDB URI (Atlas)
 const MONGODB_URI = process.env.MONGODB_URI;
+// Fallback to local MongoDB if available
+const LOCAL_MONGODB_URI = 'mongodb://localhost:27017/udo-druk';
 
 if (!MONGODB_URI) {
-  throw new Error(
-    'Please define the MONGODB_URI environment variable inside .env.local'
-  );
+  console.warn('MONGODB_URI not defined, will try to use local MongoDB');
 }
 
 /**
@@ -38,17 +39,38 @@ async function dbConnect() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      serverSelectionTimeoutMS: 10000, // Timeout after 10 seconds
+      socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+      family: 4, // Use IPv4, skip trying IPv6
+      maxPoolSize: 10, // Maintain up to 10 socket connections
+      retryWrites: true,
+      retryReads: true,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
-      return mongoose;
-    });
+    // Try to connect to the primary MongoDB first
+    try {
+      console.log('Attempting to connect to primary MongoDB...');
+      cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
+        console.log('Connected to primary MongoDB');
+        return mongoose;
+      });
+    } catch (primaryError) {
+      console.error('Failed to connect to primary MongoDB:', primaryError);
+      
+      // If primary connection fails, try the local fallback
+      console.log('Attempting to connect to local MongoDB...');
+      cached.promise = mongoose.connect(LOCAL_MONGODB_URI, opts).then((mongoose) => {
+        console.log('Connected to local MongoDB');
+        return mongoose;
+      });
+    }
   }
   
   try {
     cached.conn = await cached.promise;
   } catch (e) {
     cached.promise = null;
+    console.error('MongoDB connection error:', e);
     throw e;
   }
 

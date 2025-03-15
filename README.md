@@ -1,52 +1,32 @@
-# U-DO Druk - E-commerce Platform
+# Udo-Druk
 
-A modern e-commerce platform for selling prints and products with admin management capabilities.
+A Next.js application with MongoDB for managing printing services.
+
+## Overview
+
+This application provides a platform for managing printing services, user accounts, and orders. It's built with:
+
+- **Next.js**: React framework for server-rendered applications
+- **MongoDB**: NoSQL database for storing application data
+- **Docker**: Containerization for consistent development and deployment
+- **Redis**: For caching and session management
+- **NextAuth.js**: Authentication solution for Next.js
 
 ## Features
 
-- Multi-language support (English, Ukrainian, Polish, Japanese)
-- Product and print management
-- Order management
-- User authentication and authorization
-- Admin dashboard
-- Responsive design
-
-## Backend API
-
-The application includes a RESTful API for managing products, prints, and orders:
-
-### Products API
-
-- `GET /api/products` - Get all products (with optional filtering)
-- `POST /api/products` - Create a new product (admin only)
-- `GET /api/products/:id` - Get a specific product
-- `PUT /api/products/:id` - Update a product (admin only)
-- `DELETE /api/products/:id` - Delete a product (admin only)
-
-### Prints API
-
-- `GET /api/prints` - Get all prints (with optional filtering)
-- `POST /api/prints` - Create a new print (admin only)
-- `GET /api/prints/:id` - Get a specific print
-- `PUT /api/prints/:id` - Update a print (admin only)
-- `DELETE /api/prints/:id` - Delete a print (admin only)
-
-### Orders API
-
-- `GET /api/orders` - Get all orders (admin) or user orders
-- `POST /api/orders` - Create a new order
-- `GET /api/orders/:id` - Get a specific order
-- `PUT /api/orders/:id` - Update an order status (admin only)
-- `DELETE /api/orders/:id` - Delete an order (admin only)
+- User authentication and authorization with role-based access control
+- Admin dashboard for managing users, products, and orders
+- Responsive design for desktop and mobile devices
+- Environment-specific configurations for development, testing, and production
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
-- MongoDB database
+- Docker and Docker Compose installed
+- Node.js and npm installed (for local development without Docker)
 
-### Installation
+### Quick Start
 
 1. Clone the repository:
 
@@ -55,85 +35,86 @@ The application includes a RESTful API for managing products, prints, and orders
    cd udo-druk
    ```
 
-2. Install dependencies:
+2. Start the development environment:
 
    ```bash
-   npm install
+   ./dev.sh
+   # or
+   npm run dev:docker
    ```
 
-3. Create a `.env.local` file in the root directory with the following variables:
+3. Access the application at http://localhost:3000
 
-   ```
-   MONGODB_URI=mongodb+srv://your-username:your-password@your-cluster.mongodb.net/udo-druk?retryWrites=true&w=majority
-   NEXTAUTH_SECRET=your-nextauth-secret-key
-   NEXTAUTH_URL=http://localhost:3000
-   ```
+### Default Admin User
 
-4. Start the development server:
+The application is seeded with a default admin user:
 
-   ```bash
-   npm run dev
-   ```
+- Email: m@u-do.store
+- Password: motherlord (should be changed in production)
+- Role: superadmin
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+## Environment Setup
 
-### Admin Access
+The project supports three environments:
 
-Use the following credentials to access the admin dashboard:
+1. **Development**: For local development with hot reloading
+2. **Testing**: For testing builds in a staging environment
+3. **Production**: For the live production environment
 
-- **Admin User**
+For detailed instructions on setting up and using each environment, see [ENVIRONMENTS.md](ENVIRONMENTS.md).
 
-  - Email: admin@u-do.shop
-  - Password: admin123
+## Project Structure
 
-- **Superadmin User**
-  - Email: marina@u-do.shop
-  - Password: motherlord
-
-## Database Models
-
-### Product Model
-
-```typescript
-interface IProduct {
-  name: string;
-  description: string;
-  price: number;
-  images: string[];
-  category: string;
-  featured: boolean;
-  inStock: boolean;
-}
+```
+udo-druk/
+├── app/                  # Next.js application code
+│   ├── api/              # API routes
+│   ├── components/       # React components
+│   ├── lib/              # Utility functions and libraries
+│   ├── models/           # MongoDB models
+│   └── pages/            # Next.js pages
+├── environments/         # Environment-specific configurations
+│   ├── dev/              # Development environment
+│   ├── test/             # Testing environment
+│   └── prod/             # Production environment
+├── public/               # Static files
+├── scripts/              # Utility scripts
+├── dev.sh                # Development environment script
+├── test.sh               # Testing environment script
+├── prod.sh               # Production environment script
+├── package.json          # Project dependencies and scripts
+└── README.md             # This file
 ```
 
-### Print Model
+## Scripts
 
-```typescript
-interface IPrint {
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  category: string;
-  featured: boolean;
-  inStock: boolean;
-}
-```
+- `npm run dev`: Start the Next.js development server
+- `npm run dev:docker`: Start the development environment with Docker
+- `npm run test:docker`: Start the testing environment with Docker
+- `npm run prod:docker`: Start the production environment with Docker
+- `npm run build`: Build the Next.js application
+- `npm run start`: Start the Next.js production server
+- `npm run lint`: Run ESLint
+- `npm run seed:admin`: Seed the default admin user
 
-### Order Model
+For more scripts, see the `scripts` section in `package.json`.
 
-```typescript
-interface IOrder {
-  userId: string;
-  items: CartItem[];
-  totalAmount: number;
-  shippingAddress: ShippingAddress;
-  status: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
-  paymentStatus: "pending" | "paid" | "failed";
-  paymentMethod: string;
-}
-```
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- [Next.js](https://nextjs.org/)
+- [MongoDB](https://www.mongodb.com/)
+- [Docker](https://www.docker.com/)
+- [Redis](https://redis.io/)
+- [NextAuth.js](https://next-auth.js.org/)

@@ -9,11 +9,15 @@ import { AuthProvider } from "@/providers/AuthProvider";
 import { CartProvider } from "@/contexts/CartContext";
 import { UserProvider } from "@/contexts/UserContext";
 import { PrintsProvider } from "@/contexts/PrintsContext";
-import { ThemeProvider } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
+import { Suspense } from "react";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
+
+// Simple fallback component
+const Fallback = () => <div className="min-h-screen bg-background"></div>;
 
 // Wrapper component to access locale context
 function RootLayoutContent({ children }: { children: React.ReactNode }) {
@@ -21,6 +25,14 @@ function RootLayoutContent({ children }: { children: React.ReactNode }) {
 
   return (
     <html lang={locale} className="light">
+      <head>
+        {/* Add chunk error handling script */}
+        <Script
+          id="chunk-error-handler"
+          src="/chunk-error-handler.js"
+          strategy="beforeInteractive"
+        />
+      </head>
       <body
         className={cn(
           "min-h-screen bg-background antialiased",
@@ -43,18 +55,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AuthProvider>
-      <LocaleProvider>
-        <CurrencyProvider>
-          <UserProvider>
-            <PrintsProvider>
-              <ThemeProvider>
+    <Suspense fallback={<Fallback />}>
+      <AuthProvider>
+        <LocaleProvider>
+          <CurrencyProvider>
+            <UserProvider>
+              <PrintsProvider>
                 <RootLayoutContent>{children}</RootLayoutContent>
-              </ThemeProvider>
-            </PrintsProvider>
-          </UserProvider>
-        </CurrencyProvider>
-      </LocaleProvider>
-    </AuthProvider>
+              </PrintsProvider>
+            </UserProvider>
+          </CurrencyProvider>
+        </LocaleProvider>
+      </AuthProvider>
+    </Suspense>
   );
 }

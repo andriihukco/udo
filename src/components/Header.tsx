@@ -27,6 +27,7 @@ import {
   ArrowRight,
   Coins,
   Phone,
+  Send,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CartButton } from "@/components/ui/cart-button";
@@ -54,7 +55,6 @@ import { useUser } from "@/contexts/UserContext";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { Switch } from "@/components/ui/switch";
-import { useTheme } from "@/contexts/ThemeContext";
 
 // Add type definition for User with isAmbassador
 interface ExtendedUser {
@@ -74,7 +74,6 @@ export default function Header() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showSheetMenu, setShowSheetMenu] = useState(false);
-  const { theme, toggleTheme } = useTheme();
 
   const isAdmin = user?.role === "admin" || user?.role === "superadmin";
   const typedUser = user as ExtendedUser | null;
@@ -103,21 +102,6 @@ export default function Header() {
     : [
         { href: "/", icon: Home, label: t("nav.home") },
         { href: "/products", icon: Shirt, label: t("nav.clothingAccessories") },
-        {
-          href: "/prints",
-          icon: () => (
-            <div className="relative w-5 h-5 flex-shrink-0">
-              <Image
-                src="/print-icon.svg"
-                alt={t("nav.printIcon")}
-                fill
-                className="object-contain"
-              />
-            </div>
-          ),
-          label: t("nav.customization"),
-        },
-        { href: "/prints", icon: Printer, label: t("nav.prints") },
         { href: "/about", icon: BadgeInfo, label: t("nav.about") },
       ];
 
@@ -328,7 +312,7 @@ export default function Header() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "px-3 py-2 rounded-full text-sm transition-colors hover:bg-accent group flex items-center",
+                    "px-3 py-2 rounded-full text-sm transition-colors hover:bg-accent hover:text-primary group flex items-center",
                     isActive(item.href)
                       ? "font-medium text-foreground"
                       : "text-muted-foreground"
@@ -337,11 +321,11 @@ export default function Header() {
                   <Icon
                     icon={item.icon}
                     size="menu"
-                    className="mr-2 text-primary group-hover:scale-110 transition-transform"
+                    className="mr-2 text-foreground group-hover:text-primary group-hover:scale-110 transition-all"
                   />
                   <span
                     className={cn(
-                      "group-hover:underline",
+                      "group-hover:underline group-hover:text-primary",
                       isActive(item.href) ? "underline" : ""
                     )}
                   >
@@ -472,7 +456,7 @@ export default function Header() {
                             </div>
                           </div>
 
-                          {/* Admin/Customer Switcher */}
+                          {/* Admin/Customer Switcher - Only show for admin users */}
                           {(typedUser.role === "admin" ||
                             typedUser.role === "superadmin") && (
                             <div className="mb-4 bg-muted/30 p-4 rounded-lg">
@@ -541,7 +525,7 @@ export default function Header() {
                                 <Icon
                                   icon={Coins}
                                   size="default"
-                                  className="mr-1.5 text-primary"
+                                  className="mr-1.5 text-foreground"
                                 />
                                 <span className="text-sm font-medium">
                                   250 {t("user.coins")}
@@ -679,15 +663,15 @@ export default function Header() {
                                 "flex items-center p-3 rounded-full transition-colors group w-full",
                                 isActive(item.href)
                                   ? "bg-accent text-foreground font-medium"
-                                  : "hover:bg-accent hover:text-foreground text-muted-foreground"
+                                  : "hover:bg-accent hover:text-primary text-muted-foreground"
                               )}
                             >
                               <Icon
                                 icon={item.icon}
                                 size="menu"
-                                className="mr-3 text-primary group-hover:scale-110 transition-transform"
+                                className="mr-3 text-foreground group-hover:text-primary group-hover:scale-110 transition-all"
                               />
-                              <span className="group-hover:underline">
+                              <span className="group-hover:underline group-hover:text-primary">
                                 {item.label}
                               </span>
                               {isActive(item.href) && (
@@ -712,14 +696,14 @@ export default function Header() {
                           <SheetClose asChild>
                             <Link
                               href="/admin/settings"
-                              className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-foreground w-full"
+                              className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-primary w-full"
                             >
                               <Icon
                                 icon={Settings}
                                 size="menu"
-                                className="mr-3 text-primary group-hover:scale-110 transition-transform"
+                                className="mr-3 text-foreground group-hover:text-primary group-hover:scale-110 transition-all"
                               />
-                              <span className="group-hover:underline">
+                              <span className="group-hover:underline group-hover:text-primary">
                                 {t("nav.settings")}
                               </span>
                               <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
@@ -743,14 +727,14 @@ export default function Header() {
                               <SheetClose asChild>
                                 <Link
                                   href="/favorites"
-                                  className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-foreground w-full"
+                                  className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-primary w-full"
                                 >
                                   <Icon
                                     icon={Heart}
                                     size="menu"
-                                    className="mr-3 text-primary group-hover:scale-110 transition-transform"
+                                    className="mr-3 text-foreground group-hover:text-primary group-hover:scale-110 transition-all"
                                   />
-                                  <span className="group-hover:underline">
+                                  <span className="group-hover:underline group-hover:text-primary">
                                     {t("common.favorites")}
                                   </span>
                                   <div className="ml-auto flex items-center">
@@ -764,21 +748,21 @@ export default function Header() {
                             ) : (
                               <button
                                 onClick={() => setShowAuthModal(true)}
-                                className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-foreground w-full text-left"
+                                className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-primary w-full text-left"
                               >
                                 <Icon
                                   icon={Heart}
                                   size="menu"
-                                  className="mr-3 text-primary group-hover:scale-110 transition-transform"
+                                  className="mr-3 text-foreground group-hover:text-primary group-hover:scale-110 transition-all"
                                 />
-                                <span className="group-hover:underline">
+                                <span className="group-hover:underline group-hover:text-primary">
                                   {t("common.favorites")}
                                 </span>
                                 <div className="ml-auto flex items-center">
                                   <Badge variant="outline" className="mr-2">
                                     0
                                   </Badge>
-                                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                                  <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
                                 </div>
                               </button>
                             )}
@@ -793,7 +777,7 @@ export default function Header() {
                                   <Icon
                                     icon={ShoppingBag}
                                     size="menu"
-                                    className="mr-3 text-primary group-hover:scale-110 transition-transform"
+                                    className="mr-3 text-foreground group-hover:text-primary group-hover:scale-110 transition-all"
                                   />
                                   <span className="group-hover:underline">
                                     {t("user.orders")}
@@ -804,14 +788,14 @@ export default function Header() {
                             ) : (
                               <button
                                 onClick={() => setShowAuthModal(true)}
-                                className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-foreground text-muted-foreground w-full text-left"
+                                className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-primary w-full text-left"
                               >
                                 <Icon
                                   icon={ShoppingBag}
                                   size="menu"
-                                  className="mr-3 text-primary group-hover:scale-110 transition-transform"
+                                  className="mr-3 text-foreground group-hover:text-primary group-hover:scale-110 transition-all"
                                 />
-                                <span className="group-hover:underline">
+                                <span className="group-hover:underline group-hover:text-primary">
                                   {t("user.orders")}
                                 </span>
                                 <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
@@ -828,7 +812,7 @@ export default function Header() {
                                   <Icon
                                     icon={Settings}
                                     size="menu"
-                                    className="mr-3 text-primary group-hover:scale-110 transition-transform"
+                                    className="mr-3 text-foreground group-hover:text-primary group-hover:scale-110 transition-all"
                                   />
                                   <span className="group-hover:underline">
                                     {t("user.settings")}
@@ -842,14 +826,14 @@ export default function Header() {
                             {isAuthenticated && (
                               <button
                                 onClick={logoutUser}
-                                className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-foreground text-muted-foreground w-full"
+                                className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-primary w-full text-left"
                               >
                                 <Icon
                                   icon={LogOut}
                                   size="menu"
-                                  className="mr-3 text-rose-500 group-hover:scale-110 transition-transform"
+                                  className="mr-3 text-foreground group-hover:text-primary group-hover:scale-110 transition-all"
                                 />
-                                <span className="group-hover:underline">
+                                <span className="group-hover:underline group-hover:text-primary">
                                   {t("user.logout")}
                                 </span>
                               </button>
@@ -890,7 +874,7 @@ export default function Header() {
                       <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3">
                         {t("menu.ourLocations")}
                       </h3>
-                      <div className="grid grid-cols-1 gap-3">
+                      <div className="grid grid-cols-1 gap-0">
                         {locations.map((location, index) => (
                           <SheetClose key={index} asChild>
                             <Link
@@ -899,14 +883,14 @@ export default function Header() {
                               )}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-foreground text-muted-foreground w-full"
+                              className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-primary text-muted-foreground w-full"
                             >
-                              <div className="w-10 h-10 relative border border-border rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center bg-background mr-3">
+                              <div className="w-12 h-12 relative border border-border rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center bg-background mr-3">
                                 <Image
                                   src={location.icon}
                                   alt={location.name}
-                                  width={30}
-                                  height={30}
+                                  width={36}
+                                  height={36}
                                   className="object-contain"
                                 />
                               </div>
@@ -918,11 +902,7 @@ export default function Header() {
                                   {location.address}
                                 </span>
                               </div>
-                              <Icon
-                                icon={ArrowRight}
-                                className="ml-auto text-muted-foreground opacity-0 group-hover:opacity-100 group-hover:text-primary transition-all"
-                                size="default"
-                              />
+                              <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto group-hover:text-primary" />
                             </Link>
                           </SheetClose>
                         ))}
@@ -937,42 +917,51 @@ export default function Header() {
                       <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3">
                         {t("menu.contactUs")}
                       </h3>
-                      <div className="grid grid-cols-1 gap-3">
+                      <div className="grid grid-cols-1 gap-0">
                         <SheetClose asChild>
                           <Link
                             href="mailto:hi@u-do.shop"
-                            className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-foreground text-muted-foreground w-full"
+                            className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-primary text-muted-foreground w-full"
                           >
-                            <div className="w-10 h-10 rounded-full border border-border bg-background flex items-center justify-center mr-3">
-                              <Mail className="h-5 w-5 text-primary" />
+                            <div className="w-12 h-12 rounded-full border border-border bg-background flex items-center justify-center mr-3">
+                              <Mail className="h-6 w-6 text-foreground group-hover:text-primary" />
                             </div>
                             <span className="text-base font-medium text-foreground group-hover:text-primary group-hover:underline transition-all">
                               hi@u-do.shop
                             </span>
-                            <Icon
-                              icon={ArrowRight}
-                              className="ml-auto text-muted-foreground opacity-0 group-hover:opacity-100 group-hover:text-primary transition-all"
-                              size="default"
-                            />
+                            <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto group-hover:text-primary" />
                           </Link>
                         </SheetClose>
 
                         <SheetClose asChild>
                           <Link
                             href="tel:+380630703307"
-                            className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-foreground text-muted-foreground w-full"
+                            className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-primary text-muted-foreground w-full"
                           >
-                            <div className="w-10 h-10 rounded-full border border-border bg-background flex items-center justify-center mr-3">
-                              <Phone className="h-5 w-5 text-primary" />
+                            <div className="w-12 h-12 rounded-full border border-border bg-background flex items-center justify-center mr-3">
+                              <Phone className="h-6 w-6 text-foreground group-hover:text-primary" />
                             </div>
                             <span className="text-base font-medium text-foreground group-hover:text-primary group-hover:underline transition-all">
                               +38 063 070 33 07
                             </span>
-                            <Icon
-                              icon={ArrowRight}
-                              className="ml-auto text-muted-foreground opacity-0 group-hover:opacity-100 group-hover:text-primary transition-all"
-                              size="default"
-                            />
+                            <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto group-hover:text-primary" />
+                          </Link>
+                        </SheetClose>
+
+                        <SheetClose asChild>
+                          <Link
+                            href="https://t.me/udo.contact"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-primary text-muted-foreground w-full"
+                          >
+                            <div className="w-12 h-12 rounded-full border border-border bg-background flex items-center justify-center mr-3">
+                              <Send className="h-6 w-6 text-foreground group-hover:text-primary" />
+                            </div>
+                            <span className="text-base font-medium text-foreground group-hover:text-primary group-hover:underline transition-all">
+                              @udo.contact
+                            </span>
+                            <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto group-hover:text-primary" />
                           </Link>
                         </SheetClose>
                       </div>

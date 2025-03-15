@@ -6,7 +6,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import { FadeIn } from "@/components/ui/fade-in";
-import { ThemeBanner } from "@/components/ThemeBanner";
 
 interface LayoutWrapperProps {
   children: React.ReactNode;
@@ -34,7 +33,6 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
     return (
       <div className="flex flex-col min-h-screen">
         <Header />
-        <ThemeBanner />
         <main className="flex-grow pt-10">
           <FadeIn duration={800} threshold={0.01}>
             {children}
@@ -49,7 +47,6 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <ThemeBanner />
       <main className="flex-grow pt-10">
         <FadeIn duration={800} threshold={0.01}>
           {children}

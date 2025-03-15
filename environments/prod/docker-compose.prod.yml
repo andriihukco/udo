@@ -1,0 +1,117 @@
+services:
+  nextjs:
+    build:
+      context: ../../
+      dockerfile: Dockerfile.prod
+    container_name: druk-nextjs-prod
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://admin:${MONGO_PASSWORD:-password}@mongodb:27017/druk_prod?authSource=admin
+      - REDIS_URI=redis://redis:6379
+      - DEFAULT_ADMIN_NAME=${DEFAULT_ADMIN_NAME:-M}
+      - DEFAULT_ADMIN_ID=${DEFAULT_ADMIN_ID:-1}
+      - DEFAULT_ADMIN_ROLE=${DEFAULT_ADMIN_ROLE:-superadmin}
+      - DEFAULT_ADMIN_EMAIL=${DEFAULT_ADMIN_EMAIL:-m@u-do.store}
+      - DEFAULT_ADMIN_PASSWORD=${DEFAULT_ADMIN_PASSWORD:-motherlord}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-https://yourdomain.com}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-production_secret_key}
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  nginx:
+    image: nginx:alpine
+    container_name: druk-nginx-prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../../environments/prod/nginx.prod.conf:/etc/nginx/nginx.conf
+      - ../../ssl:/etc/nginx/ssl
+      - ../../public:/usr/share/nginx/html
+      - ../../certbot/conf:/etc/letsencrypt
+      - ../../certbot/www:/var/www/certbot
+    depends_on:
+      nextjs:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  certbot:
+    image: certbot/certbot
+    container_name: druk-certbot-prod
+    volumes:
+      - ../../certbot/conf:/etc/letsencrypt
+      - ../../certbot/www:/var/www/certbot
+    depends_on:
+      - nginx
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+  mongodb:
+    image: mongo:latest
+    container_name: druk-mongodb-prod
+    volumes:
+      - mongodb_prod_data:/data/db
+      - ../../mongodb_backups:/backups
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD:-password}
+      - MONGO_INITDB_DATABASE=druk_prod
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh mongodb://admin:${MONGO_PASSWORD:-password}@localhost:27017/admin --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    command: >
+      bash -c '
+        echo "MongoDB container started"
+        mongod --auth &
+        sleep 5
+        echo "Setting up backup cron job"
+        echo "0 0 * * * mongodump --host localhost --port 27017 -u admin -p ${MONGO_PASSWORD:-password} --authenticationDatabase admin --out /backups/backup-\$(date +\%Y\%m\%d)" > /etc/cron.d/mongodb-backup
+        crontab /etc/cron.d/mongodb-backup
+        cron
+        wait
+      '
+
+  redis:
+    image: redis:alpine
+    container_name: druk-redis-prod
+    volumes:
+      - redis_prod_data:/data
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongodb_prod_data:
+  redis_prod_data: 

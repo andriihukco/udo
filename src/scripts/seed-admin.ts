@@ -3,9 +3,11 @@ import { resolve } from 'path';
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-// Load environment variables from .env.local
-const envPath = resolve(process.cwd(), '.env.local');
-console.log('Loading environment variables from:', envPath);
+// Load environment variables from .env.local and .env
+const envLocalPath = resolve(process.cwd(), '.env.local');
+const envPath = resolve(process.cwd(), '.env');
+console.log('Loading environment variables from:', envLocalPath, 'and', envPath);
+config({ path: envLocalPath });
 config({ path: envPath });
 
 // Log the MongoDB URI to verify it's loaded
@@ -35,6 +37,15 @@ const UserSchema = new mongoose.Schema(
       type: String,
       enum: ['user', 'admin', 'superadmin'],
       default: 'user',
+    },
+    isUndeletable: {
+      type: Boolean,
+      default: false,
+    },
+    customId: {
+      type: String,
+      unique: true,
+      sparse: true, // Allow null/undefined values
     },
   },
   {
@@ -72,24 +83,41 @@ async function seedAdmin() {
       throw new Error('MONGODB_URI is not defined in environment variables');
     }
 
+    // Get default admin credentials from environment variables
+    const adminName = process.env.DEFAULT_ADMIN_NAME || 'M';
+    const adminId = process.env.DEFAULT_ADMIN_ID || '1';
+    const adminRole = process.env.DEFAULT_ADMIN_ROLE || 'superadmin';
+    const adminEmail = process.env.DEFAULT_ADMIN_EMAIL || 'm@u-do.store';
+    const adminPassword = process.env.DEFAULT_ADMIN_PASSWORD || 'motherlord';
+
     // Connect to MongoDB
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('Connected to MongoDB');
 
     // Check if superadmin already exists
-    const existingAdmin = await User.findOne({ email: 'marina@u-do.shop' });
+    const existingAdmin = await User.findOne({ email: adminEmail });
     
     if (existingAdmin) {
       console.log('Superadmin already exists');
+      
+      // Update the existing admin to ensure it's undeletable and has the correct properties
+      existingAdmin.isUndeletable = true;
+      existingAdmin.customId = adminId;
+      existingAdmin.role = adminRole;
+      
+      await existingAdmin.save();
+      console.log('Superadmin updated to be undeletable');
       return;
     }
 
     // Create superadmin user
     const superadmin = new User({
-      name: 'Marina',
-      email: 'marina@u-do.shop',
-      password: 'motherlord', // Will be hashed by the pre-save hook
-      role: 'superadmin',
+      name: adminName,
+      email: adminEmail,
+      password: adminPassword, // Will be hashed by the pre-save hook
+      role: adminRole,
+      isUndeletable: true, // Make this admin undeletable
+      customId: adminId,
     });
 
     await superadmin.save();

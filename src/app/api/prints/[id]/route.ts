@@ -8,10 +8,10 @@ import mongoose from 'mongoose';
 // GET a specific print
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     
     // Validate MongoDB ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -44,7 +44,7 @@ export async function GET(
 // PUT (update) a specific print (admin only)
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -57,7 +57,7 @@ export async function PUT(
       );
     }
     
-    const { id } = params;
+    const { id } = context.params;
     
     // Validate MongoDB ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -105,7 +105,7 @@ export async function PUT(
 // DELETE a specific print (admin only)
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -118,7 +118,7 @@ export async function DELETE(
       );
     }
     
-    const { id } = params;
+    const { id } = context.params;
     
     // Validate MongoDB ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {

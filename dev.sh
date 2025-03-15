@@ -49,6 +49,41 @@ show_help() {
   echo ""
 }
 
+# Check if Docker is installed
+if ! command -v docker &> /dev/null; then
+  print_error "Docker is not installed. Please install Docker first."
+  exit 1
+fi
+
+# Check if Docker Compose is installed
+if ! command -v docker-compose &> /dev/null; then
+  print_error "Docker Compose is not installed. Please install Docker Compose first."
+  exit 1
+fi
+
+# Copy environment variables
+print_message "Setting up development environment..."
+cp environments/dev/.env.dev .env.local
+
+# Start development environment
+print_message "Starting development environment..."
+docker-compose -f environments/dev/docker-compose.dev.yml up -d
+
+# Wait for services to start
+print_message "Waiting for services to start..."
+sleep 5
+
+# Seed the admin user
+print_message "Seeding the admin user..."
+docker-compose -f environments/dev/docker-compose.dev.yml exec nextjs npm run seed-admin
+
+print_message "Development environment is running!"
+print_message "Next.js is available at: http://localhost:3000"
+print_message "MongoDB Express is available at: http://localhost:8081"
+
+print_message "To view logs, run: docker-compose -f environments/dev/docker-compose.dev.yml logs -f"
+print_message "To stop the environment, run: docker-compose -f environments/dev/docker-compose.dev.yml down"
+
 # Start development server
 start_dev() {
   print_step "Starting development server..."

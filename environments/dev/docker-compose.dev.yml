@@ -1,0 +1,78 @@
+services:
+  nextjs:
+    build:
+      context: ../../
+      dockerfile: Dockerfile.dev
+    container_name: druk-nextjs-dev
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/druk_dev?authSource=admin
+      - REDIS_URI=redis://redis:6379
+      - DEFAULT_ADMIN_NAME=M
+      - DEFAULT_ADMIN_ID=1
+      - DEFAULT_ADMIN_ROLE=superadmin
+      - DEFAULT_ADMIN_EMAIL=m@u-do.store
+      - DEFAULT_ADMIN_PASSWORD=motherlord
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=dev_secret_key_for_local_development
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../../:/app
+      - /app/node_modules
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - app-network
+    command: npm run dev
+
+  mongodb:
+    image: mongo:latest
+    container_name: druk-mongodb-dev
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=druk_dev
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  redis:
+    image: redis:alpine
+    container_name: druk-redis-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  mongo-express:
+    image: mongo-express
+    container_name: druk-mongo-express-dev
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+      - ME_CONFIG_MONGODB_URL=mongodb://admin:password@mongodb:27017/admin
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  redis_data: 
