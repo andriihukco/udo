@@ -4,13 +4,6 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import mongoose from 'mongoose';
 import { GridFSBucket, ObjectId } from 'mongodb';
-import { Readable } from 'stream';
-
-interface Params {
-  params: {
-    id: string;
-  };
-}
 
 // GET a specific uploaded file
 export async function GET(
@@ -108,7 +101,60 @@ export async function DELETE(
   try {
     const session = await getServerSession(authOptions);
     
-    // Rest of the function...
+    // Check if user is authenticated and is an admin
+    if (!session || !['admin', 'superadmin'].includes(session.user.role)) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+    
+    const { id } = params;
+    
+    // Validate MongoDB ObjectId
+    if (!ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { error: 'Invalid file ID' },
+        { status: 400 }
+      );
+    }
+    
+    // Connect to the database
+    await dbConnect();
+    
+    // Get the MongoDB connection
+    const conn = mongoose.connection;
+    const db = conn.db;
+    
+    // Check if db is defined
+    if (!db) {
+      return NextResponse.json(
+        { error: 'Database connection failed' },
+        { status: 500 }
+      );
+    }
+    
+    // Create a GridFS bucket
+    const bucket = new GridFSBucket(db, {
+      bucketName: 'uploads'
+    });
+    
+    // Find the file metadata
+    const file = await db.collection('uploads.files').findOne({
+      _id: new ObjectId(id)
+    });
+    
+    if (!file) {
+      return NextResponse.json(
+        { error: 'File not found' },
+        { status: 404 }
+      );
+    }
+    
+    // Delete the file
+    await bucket.delete(new ObjectId(id));
+    
+    return NextResponse.json({ message: 'File deleted successfully' });
   } catch (error) {
     console.error('Error deleting upload:', error);
     return NextResponse.json(
