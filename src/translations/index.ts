@@ -590,20 +590,160 @@ export const products: Translations = {
     jp: "高品質な製品コレクションをご覧ください",
   },
   addToCart: {
-    en: "Add to Cart",
-    uk: "Додати в кошик",
-    pl: "Dodaj do koszyka",
+    en: "Add",
+    uk: "Додати",
+    pl: "Dodaj",
+    jp: "追加",
   },
   filters: {
-    en: "Filters",
-    uk: "Фільтри",
-    pl: "Filtry",
+    title: {
+      en: "Filters",
+      uk: "Фільтри",
+      pl: "Filtry",
+      jp: "フィルター",
+    },
+    description: {
+      en: "Filter products by category, material, color, size, and price",
+      uk: "Фільтрувати товари за категорією, матеріалом, кольором, розміром та ціною",
+      pl: "Filtruj produkty według kategorii, materiału, koloru, rozmiaru i ceny",
+      jp: "カテゴリー、素材、色、サイズ、価格で商品をフィルタリング",
+    },
+    printable: {
+      en: "Printable",
+      uk: "Для друку",
+      pl: "Do nadruku",
+      jp: "印刷可能",
+    },
+    printableDescription: {
+      en: "Show only products that can be customized with prints",
+      uk: "Показати лише товари, які можна кастомізувати принтами",
+      pl: "Pokaż tylko produkty, które można dostosować nadrukami",
+      jp: "プリントでカスタマイズできる商品のみを表示",
+    },
+    categories: {
+      en: "Categories",
+      uk: "Категорії",
+      pl: "Kategorie",
+      jp: "カテゴリー",
+    },
+    materials: {
+      en: "Materials",
+      uk: "Матеріали",
+      pl: "Materiały",
+      jp: "素材",
+    },
+    colors: {
+      en: "Colors",
+      uk: "Кольори",
+      pl: "Kolory",
+      jp: "色",
+    },
+    sizes: {
+      en: "Sizes",
+      uk: "Розміри",
+      pl: "Rozmiary",
+      jp: "サイズ",
+    },
+    priceRange: {
+      en: "Price Range",
+      uk: "Ціновий діапазон",
+      pl: "Zakres cen",
+      jp: "価格帯",
+    },
+    min: {
+      en: "Min",
+      uk: "Мін",
+      pl: "Min",
+      jp: "最小",
+    },
+    max: {
+      en: "Max",
+      uk: "Макс",
+      pl: "Maks",
+      jp: "最大",
+    },
+    apply: {
+      en: "Apply Filters",
+      uk: "Застосувати фільтри",
+      pl: "Zastosuj filtry",
+      jp: "フィルターを適用",
+    },
+    reset: {
+      en: "Reset Filters",
+      uk: "Скинути фільтри",
+      pl: "Resetuj filtry",
+      jp: "フィルターをリセット",
+    },
+    resetAll: {
+      en: "Reset All",
+      uk: "Скинути все",
+      pl: "Resetuj wszystko",
+      jp: "すべてリセット",
+    },
   },
-  categories: {
-    en: "Categories",
-    uk: "Категорії",
-    pl: "Kategorie",
+  
+  // Sort related translations
+  "sort.placeholder": {
+    en: "Sort by",
+    uk: "Сортувати за",
+    pl: "Sortuj według",
+    jp: "並び替え",
   },
+  "sort.featured": {
+    en: "Featured",
+    uk: "Рекомендовані",
+    pl: "Polecane",
+    jp: "おすすめ",
+  },
+  "sort.newest": {
+    en: "Newest",
+    uk: "Найновіші",
+    pl: "Najnowsze",
+    jp: "最新",
+  },
+  "sort.priceAsc": {
+    en: "Price: Low to High",
+    uk: "Ціна: від низької до високої",
+    pl: "Cena: od najniższej",
+    jp: "価格: 安い順",
+  },
+  "sort.priceDesc": {
+    en: "Price: High to Low",
+    uk: "Ціна: від високої до низької",
+    pl: "Cena: od najwyższej",
+    jp: "価格: 高い順",
+  },
+  
+  // Search related translations
+  search: {
+    en: "Search products...",
+    uk: "Пошук товарів...",
+    pl: "Szukaj produktów...",
+    jp: "商品を検索...",
+  },
+  
+  // No results translations
+  "noResults.title": {
+    en: "No products found",
+    uk: "Товарів не знайдено",
+    pl: "Nie znaleziono produktów",
+    jp: "商品が見つかりません",
+  },
+  "noResults.description": {
+    en: "Try adjusting your filters or search query",
+    uk: "Спробуйте змінити фільтри або пошуковий запит",
+    pl: "Spróbuj dostosować filtry lub zapytanie wyszukiwania",
+    jp: "フィルターや検索クエリを調整してみてください",
+  },
+  
+  // Product count translations
+  showing: {
+    en: "Showing {count} products",
+    uk: "Показано {count} товарів",
+    pl: "Pokazano {count} produktów",
+    jp: "{count}件の商品を表示",
+  },
+  
   brands: {
     en: "Brands",
     uk: "Бренди",
@@ -664,26 +804,6 @@ export const products: Translations = {
     uk: "Товарів не знайдено",
     pl: "Nie znaleziono produktów",
   },
-  search: {
-    en: "Search",
-    uk: "Пошук",
-    pl: "Szukaj",
-  },
-  searchProducts: {
-    en: "Search products...",
-    uk: "Шукати товари...",
-    pl: "Szukaj produktów...",
-  },
-  new: {
-    en: "New",
-    uk: "Новинка",
-    pl: "Nowość",
-  },
-  sale: {
-    en: "Sale",
-    uk: "Знижка",
-    pl: "Wyprzedaż",
-  },
   narrowDownProducts: {
     en: "Narrow down products by applying filters",
     uk: "Звузьте пошук товарів, застосувавши фільтри",
@@ -693,6 +813,24 @@ export const products: Translations = {
     en: "Remove",
     uk: "Видалити",
     pl: "Usuń",
+  },
+  color: {
+    en: "Color",
+    uk: "Колір",
+    pl: "Kolor",
+    jp: "色",
+  },
+  size: {
+    en: "Size",
+    uk: "Розмір",
+    pl: "Rozmiar",
+    jp: "サイズ",
+  },
+  addPrint: {
+    en: "Add Print",
+    uk: "Додати принт",
+    pl: "Dodaj nadruk",
+    jp: "プリント追加",
   },
 };
 
