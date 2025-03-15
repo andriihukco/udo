@@ -1223,6 +1223,30 @@ export const auth: Translations = {
     uk: "Увійдіть, щоб отримати доступ до замовлень, улюбленого та персоналізованих налаштувань.",
     pl: "Zaloguj się, aby uzyskać dostęp do zamówień, ulubionych i spersonalizowanych ustawień.",
   },
+  "auth.welcomeToUDO": {
+    en: "Welcome to U:DO",
+    uk: "Ласкаво просимо до Ю:ДУ",
+    pl: "Witamy w U:DO",
+    jp: "U:DOへようこそ",
+  },
+  "auth.enterEmail": {
+    en: "Enter your email to continue",
+    uk: "Введіть вашу електронну пошту, щоб продовжити",
+    pl: "Wprowadź swój email, aby kontynuować",
+    jp: "続行するにはメールアドレスを入力してください",
+  },
+  "auth.email": {
+    en: "Email",
+    uk: "Електронна пошта",
+    pl: "Email",
+    jp: "メール",
+  },
+  "auth.continue": {
+    en: "Continue",
+    uk: "Продовжити",
+    pl: "Kontynuuj",
+    jp: "続ける",
+  },
 };
 
 // Favorites translations
@@ -1497,10 +1521,10 @@ export const locations: Translations = {
     jp: "リヴィウオフィス",
   },
   "locations.lvivAddress": {
-    en: "Shevchenko St. 123, Lviv, 79000",
-    uk: "вул. Шевченка 123, Львів, 79000",
-    pl: "ul. Szewczenki 123, Lwów, 79000",
-    jp: "シェフチェンコ通り123、リヴィウ、79000",
+    en: "123 Svobody Ave, Lviv, Ukraine",
+    uk: "проспект Свободи 123, Львів, Україна",
+    pl: "Aleja Svobody 123, Lwów, Ukraina",
+    jp: "ウクライナ、リヴィウ、スヴォボディ通り123",
   },
   "locations.lvivPhone": {
     en: "+380 32 123 4567",
@@ -1512,13 +1536,13 @@ export const locations: Translations = {
     en: "Zaporizhia Production",
     uk: "Виробництво у Запоріжжі",
     pl: "Produkcja w Zaporożu",
-    jp: "ザポリージャ生産施設",
+    jp: "ザポリージャ製造所",
   },
   "locations.zaporizhiaAddress": {
-    en: "Peremohy St. 45, Zaporizhia, 69000",
-    uk: "вул. Перемоги 45, Запоріжжя, 69000",
-    pl: "ul. Zwycięstwa 45, Zaporoże, 69000",
-    jp: "ペレモギ通り45、ザポリージャ、69000",
+    en: "456 Soborna St, Zaporizhia, Ukraine",
+    uk: "вул. Соборна 456, Запоріжжя, Україна",
+    pl: "ul. Soborna 456, Zaporoże, Ukraina",
+    jp: "ウクライナ、ザポリージャ、ソボルナ通り456",
   },
   "locations.zaporizhiaPhone": {
     en: "+380 61 765 4321",
@@ -1853,5 +1877,15 @@ export const prints: Translations = {
     uk: "Очистити пошук",
     pl: "Wyczyść wyszukiwanie",
     jp: "検索をクリア",
+  },
+};
+
+// Add the payment section at the end of the file
+export const payment: Translations = {
+  acceptedMethods: {
+    en: "Accepted Payment Methods",
+    uk: "Прийняті способи оплати",
+    pl: "Akceptowane metody płatności",
+    jp: "利用可能な支払い方法",
   },
 };
