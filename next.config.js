@@ -12,7 +12,6 @@ const nextConfig = {
   // Configuration for Next.js
   experimental: {
     // Add any experimental features here if needed
-    turbo: false, // Disable Turbopack
   },
   // Ignore ESLint errors during build
   eslint: {
