@@ -595,91 +595,89 @@ export const products: Translations = {
     pl: "Dodaj",
     jp: "追加",
   },
-  filters: {
-    title: {
-      en: "Filters",
-      uk: "Фільтри",
-      pl: "Filtry",
-      jp: "フィルター",
-    },
-    description: {
-      en: "Filter products by category, material, color, size, and price",
-      uk: "Фільтрувати товари за категорією, матеріалом, кольором, розміром та ціною",
-      pl: "Filtruj produkty według kategorii, materiału, koloru, rozmiaru i ceny",
-      jp: "カテゴリー、素材、色、サイズ、価格で商品をフィルタリング",
-    },
-    printable: {
-      en: "Printable",
-      uk: "Для друку",
-      pl: "Do nadruku",
-      jp: "印刷可能",
-    },
-    printableDescription: {
-      en: "Show only products that can be customized with prints",
-      uk: "Показати лише товари, які можна кастомізувати принтами",
-      pl: "Pokaż tylko produkty, które można dostosować nadrukami",
-      jp: "プリントでカスタマイズできる商品のみを表示",
-    },
-    categories: {
-      en: "Categories",
-      uk: "Категорії",
-      pl: "Kategorie",
-      jp: "カテゴリー",
-    },
-    materials: {
-      en: "Materials",
-      uk: "Матеріали",
-      pl: "Materiały",
-      jp: "素材",
-    },
-    colors: {
-      en: "Colors",
-      uk: "Кольори",
-      pl: "Kolory",
-      jp: "色",
-    },
-    sizes: {
-      en: "Sizes",
-      uk: "Розміри",
-      pl: "Rozmiary",
-      jp: "サイズ",
-    },
-    priceRange: {
-      en: "Price Range",
-      uk: "Ціновий діапазон",
-      pl: "Zakres cen",
-      jp: "価格帯",
-    },
-    min: {
-      en: "Min",
-      uk: "Мін",
-      pl: "Min",
-      jp: "最小",
-    },
-    max: {
-      en: "Max",
-      uk: "Макс",
-      pl: "Maks",
-      jp: "最大",
-    },
-    apply: {
-      en: "Apply Filters",
-      uk: "Застосувати фільтри",
-      pl: "Zastosuj filtry",
-      jp: "フィルターを適用",
-    },
-    reset: {
-      en: "Reset Filters",
-      uk: "Скинути фільтри",
-      pl: "Resetuj filtry",
-      jp: "フィルターをリセット",
-    },
-    resetAll: {
-      en: "Reset All",
-      uk: "Скинути все",
-      pl: "Resetuj wszystko",
-      jp: "すべてリセット",
-    },
+  "filters.title": {
+    en: "Filters",
+    uk: "Фільтри",
+    pl: "Filtry",
+    jp: "フィルター",
+  },
+  "filters.description": {
+    en: "Filter products by category, material, color, size, and price",
+    uk: "Фільтрувати товари за категорією, матеріалом, кольором, розміром та ціною",
+    pl: "Filtruj produkty według kategorii, materiału, koloru, rozmiaru i ceny",
+    jp: "カテゴリー、素材、色、サイズ、価格で商品をフィルタリング",
+  },
+  "filters.printable": {
+    en: "Printable",
+    uk: "Для друку",
+    pl: "Do nadruku",
+    jp: "印刷可能",
+  },
+  "filters.printableDescription": {
+    en: "Show only products that can be customized with prints",
+    uk: "Показати лише товари, які можна кастомізувати принтами",
+    pl: "Pokaż tylko produkty, które można dostosować nadrukami",
+    jp: "プリントでカスタマイズできる商品のみを表示",
+  },
+  "filters.categories": {
+    en: "Categories",
+    uk: "Категорії",
+    pl: "Kategorie",
+    jp: "カテゴリー",
+  },
+  "filters.materials": {
+    en: "Materials",
+    uk: "Матеріали",
+    pl: "Materiały",
+    jp: "素材",
+  },
+  "filters.colors": {
+    en: "Colors",
+    uk: "Кольори",
+    pl: "Kolory",
+    jp: "色",
+  },
+  "filters.sizes": {
+    en: "Sizes",
+    uk: "Розміри",
+    pl: "Rozmiary",
+    jp: "サイズ",
+  },
+  "filters.priceRange": {
+    en: "Price Range",
+    uk: "Ціновий діапазон",
+    pl: "Zakres cen",
+    jp: "価格帯",
+  },
+  "filters.min": {
+    en: "Min",
+    uk: "Мін",
+    pl: "Min",
+    jp: "最小",
+  },
+  "filters.max": {
+    en: "Max",
+    uk: "Макс",
+    pl: "Maks",
+    jp: "最大",
+  },
+  "filters.apply": {
+    en: "Apply Filters",
+    uk: "Застосувати фільтри",
+    pl: "Zastosuj filtry",
+    jp: "フィルターを適用",
+  },
+  "filters.reset": {
+    en: "Reset Filters",
+    uk: "Скинути фільтри",
+    pl: "Resetuj filtry",
+    jp: "フィルターをリセット",
+  },
+  "filters.resetAll": {
+    en: "Reset All",
+    uk: "Скинути все",
+    pl: "Resetuj wszystko",
+    jp: "すべてリセット",
   },
   
   // Sort related translations
@@ -831,6 +829,14 @@ export const products: Translations = {
     uk: "Додати принт",
     pl: "Dodaj nadruk",
     jp: "プリント追加",
+  },
+  
+  // Product card translations
+  addToWishlist: {
+    en: "Add to wishlist",
+    uk: "Додати до списку бажань",
+    pl: "Dodaj do listy życzeń",
+    jp: "お気に入りに追加",
   },
 };
 

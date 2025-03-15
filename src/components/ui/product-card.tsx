@@ -12,6 +12,7 @@ import { Scale } from "@/components/ui/motion";
 import { useCart, CartItem } from "@/contexts/CartContext";
 import { QuantityCounter } from "@/components/ui/quantity-counter";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import { useLocale } from "@/contexts/LocaleContext";
 
 interface ProductCardProps {
   id?: string;
@@ -45,6 +46,7 @@ export function ProductCard({
   colors = [],
   sizes = [],
 }: ProductCardProps) {
+  const { t } = useLocale();
   // Use either id or _id, with _id taking precedence
   const productId = _id || id || "";
   // Use either image or the first image from images array
@@ -131,6 +133,7 @@ export function ProductCard({
               <button
                 onClick={handleWishlist}
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white dark:bg-gray-800/80 dark:text-gray-200 dark:hover:bg-gray-800"
+                aria-label={t("products.addToWishlist")}
               >
                 <Heart
                   className={cn(
@@ -144,7 +147,9 @@ export function ProductCard({
             {(isNew || isSale) && (
               <div className="absolute top-2 left-2 z-10 flex flex-col gap-2">
                 {isNew && (
-                  <Badge className="bg-blue-500 hover:bg-blue-600">New</Badge>
+                  <Badge className="bg-blue-500 hover:bg-blue-600">
+                    {t("products.new")}
+                  </Badge>
                 )}
                 {isSale && <Badge variant="destructive">-{discount}%</Badge>}
               </div>
@@ -187,33 +192,39 @@ export function ProductCard({
               {/* Color picker */}
               {colors.length > 0 && (
                 <div className="mb-2">
-                  <div className="text-xs text-gray-500 mb-1">Color</div>
+                  <div className="text-xs text-gray-500 mb-1">
+                    {t("products.color")}
+                  </div>
                   <div className="grid grid-cols-2 gap-1">
                     {colors.map((color) => (
-                      <div
-                        key={color.value}
-                        className="flex items-center p-1.5 rounded-md cursor-pointer"
-                        style={{
-                          backgroundColor: getLighterColor(color.value, 0.1),
-                        }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          setSelectedColor(color.value);
-                        }}
-                      >
+                      <div key={color.value} className="relative group/color">
                         <div
-                          className={cn(
-                            "w-5 h-5 rounded-full border flex-shrink-0 transition-all",
-                            selectedColor === color.value
-                              ? "ring-2 ring-primary ring-offset-1"
-                              : "ring-0"
-                          )}
-                          style={{ backgroundColor: color.value }}
-                        />
-                        <span className="ml-1.5 text-xs truncate">
+                          className="flex items-center p-1.5 rounded-md cursor-pointer"
+                          style={{
+                            backgroundColor: getLighterColor(color.value, 0.1),
+                          }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setSelectedColor(color.value);
+                          }}
+                        >
+                          <div
+                            className={cn(
+                              "w-5 h-5 rounded-full border flex-shrink-0 transition-all",
+                              selectedColor === color.value
+                                ? "ring-2 ring-primary ring-offset-1"
+                                : "ring-0"
+                            )}
+                            style={{ backgroundColor: color.value }}
+                          />
+                          <span className="ml-1.5 text-xs truncate">
+                            {color.name}
+                          </span>
+                        </div>
+                        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 rounded bg-black/80 text-white text-xs opacity-0 group-hover/color:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20">
                           {color.name}
-                        </span>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -223,7 +234,9 @@ export function ProductCard({
               {/* Size picker */}
               {sizes.length > 0 && (
                 <div className="mb-3">
-                  <div className="text-xs text-gray-500 mb-1">Size</div>
+                  <div className="text-xs text-gray-500 mb-1">
+                    {t("products.size")}
+                  </div>
                   <div className="flex flex-wrap gap-1">
                     {sizes.map((size) => (
                       <button
@@ -287,7 +300,7 @@ export function ProductCard({
                 onClick={handleAddToCart}
               >
                 <ShoppingCart className="mr-2 h-4 w-4" />
-                Add
+                {t("products.addToCart")}
               </Button>
             )}
 
@@ -300,7 +313,7 @@ export function ProductCard({
                 onClick={handleCustomize}
               >
                 <ImagePlus className="mr-2 h-4 w-4" />
-                Add Print
+                {t("products.addPrint")}
               </Button>
             )}
           </div>
