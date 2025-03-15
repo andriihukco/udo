@@ -837,6 +837,23 @@ export default function Header() {
                                 </Link>
                               </SheetClose>
                             )}
+
+                            {/* Logout - Only show for authenticated users */}
+                            {isAuthenticated && (
+                              <button
+                                onClick={logoutUser}
+                                className="flex items-center p-3 rounded-full transition-colors group hover:bg-accent hover:text-foreground text-muted-foreground w-full"
+                              >
+                                <Icon
+                                  icon={LogOut}
+                                  size="menu"
+                                  className="mr-3 text-rose-500 group-hover:scale-110 transition-transform"
+                                />
+                                <span className="group-hover:underline">
+                                  {t("user.logout")}
+                                </span>
+                              </button>
+                            )}
                           </nav>
                         </div>
 
